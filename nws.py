@@ -1,206 +1,185 @@
-import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium import webdriver
-from selenium.common import exceptions as selenium_err
-from selenium.webdriver.firefox.options import Options
-import discord
-from discord.ext import commands
-from threading import Thread
-import os
-import csv
+from os import name
+from typing import ValuesView
+from urllib.parse import urljoin
+from urllib.request import URLopener, urlopen
+import requests
+from fake_useragent import UserAgent
+from bs4 import BeautifulSoup
+import re
+from requests.packages.urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
+from bs4 import BeautifulSoup
 import random
 
-token = "YOUR_TOKEN"
+fkheader = UserAgent()
+session = requests.Session()
+retry = Retry(connect=3, backoff_factor=0.5)
+adapter = HTTPAdapter(max_retries=retry)
+session.mount('http://', adapter)
+session.mount('https://', adapter)
 
-client = commands.Bot(command_prefix="!")
+def newsen():
+    website = BeautifulSoup(session.get(f'https://www.bbc.com/news/world',
+                                        headers={"User-Agent": str(fkheader.random)}).content, "html.parser")
+    lista_links = []
+    for a in website.find_all('a', href=True):
+        try:
+            if a['href'][-1].isdigit():
+                if a['href'].startswith('/news/world'):
+                    lista_links.append(f"https://www.bbc.com{a['href']}")
+        except IndexError:
+            break
+
+    news1 = random.choice(lista_links)
+    lista_links.remove(news1)
+    news2 = random.choice(lista_links)
+
+    html1 = requests.get(news1).text
+    soup = BeautifulSoup(html1, 'html.parser')
+
+    title1 = soup.find_all('title')
+    title2 = soup.findAll('meta')
 
 
-@client.event
-async def on_ready():
-    Thread(name="webdriver", target=web).run()
-    print(f"{client.user} is in the server!")
+    title111 = title1[0].text
+    stitle = str(title2[2])[str(title2[2]).find('"'):str(title2[2]).find('.')].replace('"', '')
+    print("-----------------------------------------------------------------------------------")
+    html3 = requests.get(news2).text
+    soup3 = BeautifulSoup(html3, 'html.parser')
+
+    title5 = soup3.find_all('title')
+    title6 = soup3.findAll('meta')
 
 
-driver = None
+    title122 = title5[0].text
+    stitle1 = str(title6[2])[str(title6[2]).find('"'):str(title6[2]).find('.')].replace('"', '')
 
-# You have to modify this according to your webdriver
-def web():
-    global driver
-    options = webdriver.ChromeOptions()
-    driver = webdriver.Firefox()
-    options.add_argument('window-size=1920x1080')
-    options.add_argument("disable-gpu")
-    driver = webdriver.Chrome("", chrome_options=Options)
-    driver.set_window_position(-10000, 0)
-    caps = DesiredCapabilities().CHROME
-    caps["pageLoadStrategy"] = "none"
-    print('WebBrowser is ready!')
+    website2 = BeautifulSoup(session.get(f'https://www.bbc.com/news/technology',
+                                        headers={"User-Agent": str(fkheader.random)}).content, "html.parser")
+    lista_links2 = []
+    for a in website2.find_all('a', href=True):
+        try:
+            if a['href'][-1].isdigit():
+                if a['href'].startswith('/news/technology'):
+                    lista_links2.append(f"https://www.bbc.com{a['href']}")
+        except IndexError:
+            break
 
-# First news
-def get_first_news():
-    driver.maximize_window()
-    driver.get("https://www.cnnbrasil.com.br/")
-    firstimage = driver.find_element_by_xpath("/html/body/div[1]/div[2]/div[2]/main/div/div/div[1]/section/div/a/article/div/picture/img")
-    firstimage40 = (firstimage.get_attribute('src'))
-    first = driver.find_element_by_xpath('/html/body/div/div[2]/div[2]/main/div/div/div[1]/section/div/a/article/h2')
-    title = first.text
-    first.click()
-    firstsubtitle = driver.find_element_by_xpath('/html/body/div/div[2]/div[3]/div[1]/main/article/header/h2').text
-    firsturl = driver.current_url
+    news3 = random.choice(lista_links2)
+    lista_links2.remove(news3)
+    news4 = random.choice(lista_links2)
+
+    html2 = requests.get(news3).text
+    soup2 = BeautifulSoup(html2, 'html.parser')
+
+    title3 = soup2.find_all('title')
+    title4 = soup2.findAll('meta')
+
+    title133 = title3[0].text
+    stitle2 = str(title4[2])[str(title4[2]).find('"'):str(title4[2]).find('.')].replace('"', '')
+    print("-----------------------------------------------------------------------------------")
+    html4 = requests.get(news4).text
+    soup4 = BeautifulSoup(html4, 'html.parser')
+
+    title7 = soup4.find_all('title')
+    title8 = soup4.findAll('meta')
+
+    title144 = title7[0].text
+    stitle3 = str(title8[2])[str(title8[2]).find('"'):str(title8[2]).find('.')].replace('"', '')
     return {
-        "title": title,
-        "firstsubtitle": firstsubtitle,
-        "firstimage": firstimage40,
-        "firsturl": firsturl,
+        "newsen()": newsen(),
+        "title111": title111,
+        "stitle": stitle,
+        "news1": news1,
+        "title122": title122,
+        "stitle1": stitle1,
+        "news2": news2,
+        "title133": title133,
+        "stitle2": stitle2,
+        "news3": news3,
+        "title144": title144,
+        "stitle3": stitle3,
+        "news4": news4
     }
 
-print("----------------------------------- SECOND NEWS -----------------------------------")
+def newsbr():
+    website3 = BeautifulSoup(session.get(f'https://www.bbc.com/portuguese',
+                                        headers={"User-Agent": str(fkheader.random)}).content, "html.parser")
+    lista_links3 = []
+    for a in website3.find_all('a', href=True):
+        try:
+            if a['href'][-1].isdigit():
+                if a['href'].startswith('/portuguese'):
+                    lista_links3.append(f"https://www.bbc.com{a['href']}")
+        except IndexError:
+            break
 
-# Second news
-def get_second_news():
-    driver.maximize_window()
-    driver.get("https://www.bbc.com/portuguese")
-    element = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/header/div[1]/div/div/ul/li[1]")))
-    cookies = driver.find_element_by_xpath("/html/body/div[2]/div/header/div[1]/div/div/ul/li[1]")
-    cookies.click()
-    second = driver.find_element_by_xpath("/html/body/div[2]/div/div/main/div/section[1]/div[2]/ul/li[1]/div/div[2]/h3/a")
-    secondtitle = second.text
-    print(secondtitle)
-    secondsubtitle = driver.find_element_by_xpath("/html/body/div[2]/div/div/main/div/section[1]/div[2]/ul/li[1]/div/div[2]/p").text
-    print(secondsubtitle)
-    second.click()
-    element19 = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div/div[1]/main/div[3]/figure/div/div[1]/div/img")))
-    secondimage = driver.find_element_by_xpath("/html/body/div[2]/div/div/div/div[1]/main/div[3]/figure/div/div[1]/div/img")
-    secondimage40 = (secondimage.get_attribute('src'))
-    secondurl = driver.current_url
+    news5 = random.choice(lista_links3)
+    lista_links3.remove(news5)
+    news6 = random.choice(lista_links3)
+
+    html5 = requests.get(news5).text
+    soup6 = BeautifulSoup(html5, 'html.parser')
+
+    title9 = soup6.find_all('title')
+    title10 = soup6.findAll('meta')
+
+    title111br = title9[0].text
+    stitlebr = str(title10[7])[str(title10[7]).find('"'):str(title10[7]).find('.')].replace('"', '')
+    print("-----------------------------------------------------------------------------------")
+    html6 = requests.get(news6).text
+    soup7 = BeautifulSoup(html6, 'html.parser')
+
+    title11 = soup7.find_all('title')
+    title12 = soup7.findAll('meta')
+
+    title122br = title11[0].text
+    stitle1br = str(title12[7])[str(title12[7]).find('"'):str(title12[7]).find('.')].replace('"', '')
+
+    website4 = BeautifulSoup(session.get(f'https://www.bbc.com/portuguese/topics/c404v027pd4t',
+                                        headers={"User-Agent": str(fkheader.random)}).content, "html.parser")
+    lista_links4 = []
+    for a in website4.find_all('a', href=True):
+        try:
+            if a['href'][-1].isdigit():
+                if a['href'].startswith('/portuguese'):
+                    lista_links4.append(f"https://www.bbc.com{a['href']}")
+        except IndexError:
+            break
+
+    news8 = random.choice(lista_links4)
+    lista_links4.remove(news8)
+    news9 = random.choice(lista_links4)
+
+    html7 = requests.get(news8).text
+    soup8 = BeautifulSoup(html7, 'html.parser')
+
+    title13 = soup8.find_all('title')
+    title14 = soup8.findAll('meta')
+
+    title133br = title13[0].text
+    stitle2br = str(title14[7])[str(title14[7]).find('"'):str(title14[7]).find('.')].replace('"', '')
+    print("-----------------------------------------------------------------------------------")
+    html8 = requests.get(news9).text
+    soup9 = BeautifulSoup(html8, 'html.parser')
+
+    title15 = soup9.find_all('title')
+    title16 = soup9.findAll('meta')
+
+    title144br = title15[0].text
+    stitle3br = str(title16[7])[str(title16[7]).find('"'):str(title16[7]).find('.')].replace('"', '')
     return {
-        "secondtitle": secondtitle,
-        "secondsubtitle": secondsubtitle,
-        "secondimage40": secondimage40,
-        "secondurl": secondurl,
+        "newsbr()": newsbr(),
+        "title111br": title111br,
+        "stitlebr": stitlebr,
+        "news5": news5,
+        "title122br": title122br,
+        "stitle1br": stitle1br,
+        "news6": news6,
+        "title133br": title133br,
+        "stitle2br": stitle3br,
+        "news8": news8,
+        "title144br": title144br,
+        "stitle3br": stitle3br,
+        "news9": news9,
     }
-
-print("----------------------------------- THIRD NEWS -----------------------------------")
-
-# Third news
-def get_third_news():
-    driver.maximize_window()
-    driver.get("https://www.cnnbrasil.com.br/tecnologia")
-    element = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[1]/div[2]/div[2]/main/div/div/div[2]/section/div/a/article/div[2]/h2")))
-    time.sleep(1)
-    third = driver.find_element_by_xpath("/html/body/div[1]/div[2]/div[2]/main/div/div/div[2]/section/div/a/article/div[2]/h2")
-    thirdtitle = third.text
-    thirdimage = driver.find_element_by_xpath("/html/body/div[1]/div[2]/div[2]/main/div/div/div[2]/section/div/a/article/div[1]/picture/img")
-    print(thirdtitle)
-    thirdimg1 = thirdimage.get_attribute("src")
-    print(thirdimg1)
-    thirdimage.click()
-    time.sleep(2)
-    element = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div/div[2]/div[3]/div[1]/main/article/header/h2")))
-    thirdsubtitle = driver.find_element_by_xpath('/html/body/div/div[2]/div[3]/div[1]/main/article/header/h2').text
-    print(thirdsubtitle)
-    thirdurl = driver.current_url
-    return {
-        "thirdtitle": thirdtitle,
-        "thirdsubtitle": thirdsubtitle,
-        "thirdimage": thirdimg1,
-        "thirdurl": thirdurl,
-    }
-
-print("----------------------------------- FOURTH NEWS -----------------------------------")
-
-# Fourth news
-def get_fourth_news():
-    driver.maximize_window()
-    driver.get("https://www.bbc.com/portuguese/topics/c404v027pd4t")
-    element4 = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div[9]/div[2]/div[2]/div/div/div/div/div[1]/ol/li[1]/article/header/div/h3/a/span")))
-    fourth = driver.find_element_by_xpath("/html/body/div[2]/div[9]/div[2]/div[2]/div/div/div/div/div[1]/ol/li[1]/article/header/div/h3/a/span")
-    fourthtitle = fourth.text
-    print(fourthtitle)
-    element4 = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div[9]/div[2]/div[2]/div/div/div/div/div[1]/ol/li[1]/article/div[2]/div/div[2]/p")))
-    fourthsubtitle = driver.find_element_by_xpath("/html/body/div[2]/div[9]/div[2]/div[2]/div/div/div/div/div[1]/ol/li[1]/article/div[2]/div/div[2]/p").text
-    print(fourthsubtitle)
-    fourth.click()
-    element4 = WebDriverWait(driver, 999).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/header/div[1]/div/div/ul/li[1]")))
-    cookies4 = driver.find_element_by_xpath("/html/body/div[2]/div/header/div[1]/div/div/ul/li[1]")
-    cookies4.click()
-    element20 = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div/div/div/div[1]/main/div[3]/figure/div/div[1]/div/img")))
-    fourthimage = driver.find_element_by_xpath("/html/body/div[2]/div/div/div/div[1]/main/div[3]/figure/div/div[1]/div/img")
-    fourthimage3 = (fourthimage.get_attribute('src'))
-    print(fourthimage3)
-    fourthurl = driver.current_url
-    print(fourthurl)
-    return {
-        "fourthtitle": fourthtitle,
-        "fourthsubtitle": fourthsubtitle,
-        "fourthimage3": fourthimage3,
-        "fourthurl": fourthurl,
-    }
-
-# Discord bot
-@client.event
-async def on_message(message):
-    msgcnt = message.content
-    print(message.content)
-    cmmnd = msgcnt.startswith("!4news")
-    if cmmnd:
-        await message.channel.send("**Aguarde um pouco, até as notícias serem computadas.**")
-        first_news = get_first_news()
-        print("yes------------------------------------------------------------")
-        second_news = get_second_news()
-        print("yes-------------------------------------------------------------")
-        third_news = get_third_news()
-        print("yes------------------------------------------------------------")
-        fourth_news = get_fourth_news()
-        print("yes------------------------------------------------------------")
-        driver.delete_all_cookies()
-        embedfirstnews = discord.Embed( 
-            title=f'**{first_news["title"]}**',
-            description=f'{first_news["firstsubtitle"]}',
-            colour=discord.Colour.dark_blue()
-            )
-        embedfirstnews.set_footer(text=' https://github.com/Dedsd/4TheNews-Web-Scraping ')
-        embedfirstnews.set_image(url=f'{first_news["firstimage"]}')
-        embedfirstnews.set_thumbnail(url='https://www.sferalabs.cc/wp-content/uploads/github-logo-white.png')
-        embedfirstnews.set_author(name="Feito por Dedsd")
-        embedfirstnews.add_field(name=f'**Veja a notícia: {first_news["firsturl"]}**', value=f'-', inline=True)
-        await message.channel.send(embed=embedfirstnews)
-        embedsecondnews = discord.Embed( 
-            title=f'**{second_news["secondtitle"]}**',
-            description=f'{second_news["secondsubtitle"]}',
-            colour=discord.Colour.dark_blue()
-            )
-        embedsecondnews.set_footer(text=' https://github.com/Dedsd/4TheNews-Web-Scraping ')
-        embedsecondnews.set_image(url=f'{second_news["secondimage40"]}')
-        embedsecondnews.set_thumbnail(url='https://www.sferalabs.cc/wp-content/uploads/github-logo-white.png')
-        embedsecondnews.set_author(name="Feito por Dedsd")
-        embedsecondnews.add_field(name=f'**Veja a notícia: {second_news["secondurl"]}**', value=f'-', inline=True)
-        await message.channel.send(embed=embedsecondnews)
-        embedthirdnews = discord.Embed( 
-            title=f'**{third_news["thirdtitle"]}**',
-            description=f'{third_news["thirdsubtitle"]}',
-            colour=discord.Colour.dark_blue()
-            )
-        embedthirdnews.set_footer(text=' https://github.com/Dedsd/4TheNews-Web-Scraping ')
-        embedthirdnews.set_image(url=f'{third_news["thirdimage"]}')
-        embedthirdnews.set_thumbnail(url='https://www.sferalabs.cc/wp-content/uploads/github-logo-white.png')
-        embedthirdnews.set_author(name="Feito por Dedsd")
-        embedthirdnews.add_field(name=f'**Veja a notícia: {third_news["thirdurl"]}**', value=f'-', inline=True)
-        await message.channel.send(embed=embedthirdnews)
-        embedfourthnews = discord.Embed( 
-            title=f'**{fourth_news["fourthtitle"]}**',
-            description=f'{fourth_news["fourthsubtitle"]}',
-            colour=discord.Colour.dark_blue()
-            )
-        embedfourthnews.set_footer(text=' https://github.com/Dedsd/4TheNews-Web-Scraping ')
-        embedfourthnews.set_image(url=f'{fourth_news["fourthimage3"]}')
-        embedfourthnews.set_thumbnail(url='https://www.sferalabs.cc/wp-content/uploads/github-logo-white.png')
-        embedfourthnews.set_author(name="Feito por Dedsd")
-        embedfourthnews.add_field(name=f'**Veja a notícia: {fourth_news["fourthurl"]}**', value=f'-', inline=True)
-        await message.channel.send(embed=embedfourthnews)
-client.run(token)
