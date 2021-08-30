@@ -6,7 +6,7 @@
 ---
 
 ## Considerations
-* You can use `impot nws`
+* You can use `import nws`
 * You have to install the [requirements](#requirements)
 * The news are from bbc
 * I do not own any rights to the site, news and images presented, nor am I responsible for any changes made later by someone else
