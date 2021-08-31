@@ -87,7 +87,7 @@ def newsen():
     title144 = title7[0].text
     stitle3 = str(title8[2])[str(title8[2]).find('"'):str(title8[2]).find('.')].replace('"', '')
     return {
-        "newsen()": newsen(),
+        "newsen": newsen,
         "title111": title111,
         "stitle": stitle,
         "news1": news1,
@@ -169,7 +169,7 @@ def newsbr():
     title144br = title15[0].text
     stitle3br = str(title16[7])[str(title16[7]).find('"'):str(title16[7]).find('.')].replace('"', '')
     return {
-        "newsbr()": newsbr(),
+        "newsbr": newsbr,
         "title111br": title111br,
         "stitlebr": stitlebr,
         "news5": news5,
@@ -177,7 +177,7 @@ def newsbr():
         "stitle1br": stitle1br,
         "news6": news6,
         "title133br": title133br,
-        "stitle2br": stitle3br,
+        "stitle2br": stitle2br,
         "news8": news8,
         "title144br": title144br,
         "stitle3br": stitle3br,
