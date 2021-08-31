@@ -23,7 +23,6 @@
 
 ## Credits
 * Site that are sources for the news etc: https://www.bbc.com/
-* I would like to thank [Mateus Cavalcanti](https://github.com/Mateus-Cavalcanti) who helped me solve some very annoying errors
 
 ---
 
